@@ -3,11 +3,8 @@ import java.util.List;
 
 class NguoiQuanLy extends Nguoi {
     private String chucVu;
-    private List<SinhVien> danhSachSinhVien = new ArrayList<>();
-
+    private ArrayList<SinhVien> danhSachSinhVien = new ArrayList<>();
     private ArrayList<Phong> danhSachPhong = new ArrayList<>();
-
-    // danh sách hóa đơn & yêu cầu
     private ArrayList<HoaDon> tatCaHoaDon = new ArrayList<>();
     private ArrayList<YeuCauBaoTri> tatCaYeuCau = new ArrayList<>();
 
@@ -53,7 +50,7 @@ class NguoiQuanLy extends Nguoi {
         }
     }
 
-    public List<SinhVien> getDanhSachSinhVien() {
+    public ArrayList<SinhVien> getDanhSachSinhVien() {
         return danhSachSinhVien;
     }
 
@@ -178,4 +175,13 @@ class NguoiQuanLy extends Nguoi {
         }
         System.out.println(Color.BLUE + "📨 Đã gửi nhắc thanh toán tới các phòng chưa thanh toán." + Color.RESET);
     }
+    // getter chucvu
+    public String getChucVu() { return chucVu; }
+
+    // các getter tương thích
+    public String getId() { return id; }
+    public String getHoTen() { return hoTen; }
+    public String getEmail() { return email; }
+    public String getMatKhau() { return matKhau; }
+    public String getSoDienThoai() { return soDienThoai; }
 }

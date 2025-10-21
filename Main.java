@@ -1,31 +1,70 @@
 import java.util.*;
+import java.io.*;
 
 public class Main {
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        // ===== DỮ LIỆU MẪU =====
-        NguoiQuanLy quanLy = new NguoiQuanLy(
+        /// KHỞI TẠO QUẢN LÝ THỦ CÔNG
+        ArrayList<NguoiQuanLy> danhSachQuanLy = new ArrayList<>();
+
+        // Quản Lý 1
+        NguoiQuanLy quanLy1 = new NguoiQuanLy(
                 "QL01",
                 "Nguyễn Văn A",
-                "quanly@gmail.com",
+                "quanly01@gmail.com",
                 "123",
                 "0909123456",
                 "Quản lý ký túc xá"
         );
+        danhSachQuanLy.add(quanLy1);
 
+        //Quản Lý 2
+        NguoiQuanLy quanLy2 = new NguoiQuanLy(
+                "QL02",
+                "Nguyễn Văn B",
+                "quanly02@gmail.com",
+                "456",
+                "0909123456",
+                "Quản lý ký túc xá"
+        );
+        danhSachQuanLy.add(quanLy2);
+
+        ArrayList<SinhVien> dsSV = FileHandler.docDanhSachSinhVien("sinhvien.txt");
+        ArrayList<Phong> dsPhong = FileHandler.docDanhSachPhong("phong.txt");
+
+        //Gán danh sách sinh viên và phòng cho tất cả quản lý
+        for (NguoiQuanLy ql : danhSachQuanLy) {
+            for (SinhVien sv : dsSV) {
+                ql.themSinhVien(sv);
+        }
+            for (Phong p : dsPhong) {
+                ql.themPhong(p);
+        }
+    }
+
+    // TẠO DỮ LIỆU MẪU NẾU CẦN
+    if (dsSV.isEmpty()) {
         SinhVien sv1 = new SinhVien("SV01", "Trần Văn B", "b@gmail.com", "111", "0909888777");
         SinhVien sv2 = new SinhVien("SV02", "Lê Thị C", "c@gmail.com", "222", "0911222333");
-        quanLy.themSinhVien(sv1);
-        quanLy.themSinhVien(sv2);
+    for (NguoiQuanLy ql : danhSachQuanLy) {
+        ql.themSinhVien(sv1);
+        ql.themSinhVien(sv2);
+    }
+    }
 
+    if (dsPhong.isEmpty()) {
         Phong p1 = new Phong("P01", "Phòng A1", 4);
         Phong p2 = new Phong("P02", "Phòng A2", 3);
-        quanLy.themPhong(p1);
-        quanLy.themPhong(p2);
-
+    for (NguoiQuanLy ql : danhSachQuanLy) {
+        ql.themPhong(p1);
+        ql.themPhong(p2);
         // tạo 1 hóa đơn mẫu
-        quanLy.taoHoaDon(p1, 100, 5, "2025-10");
+        ql.taoHoaDon(p1, 100, 5, "2025-10");
+    }
+}
+
 
         int chon;
         do {
@@ -38,15 +77,24 @@ public class Main {
 
             switch (chon) {
                 // ====== ĐĂNG NHẬP QUẢN LÝ ======
+                // ====== ĐĂNG NHẬP QUẢN LÝ ======
                 case 1:
                     System.out.print("Nhập email: ");
                     String emailQL = sc.nextLine();
                     System.out.print("Nhập mật khẩu: ");
                     String mkQL = sc.nextLine();
 
-                    if (quanLy.dangNhap(emailQL, mkQL)) {
+                    NguoiQuanLy quanLyDangNhap = null;
+                    for (NguoiQuanLy ql : danhSachQuanLy) {
+                        if (ql.dangNhap(emailQL, mkQL)) {
+                            quanLyDangNhap = ql;
+                            break;
+                    }
+                    }
+
+                    if (quanLyDangNhap !=null){
                         System.out.println(Color.GREEN + "✅ Đăng nhập thành công!" + Color.RESET);
-                        quanLy.hienThiThongTin();
+                        quanLyDangNhap.hienThiThongTin();
 
                         int chonQL;
                         do {
@@ -66,9 +114,8 @@ public class Main {
                             chonQL = readInt(sc);
 
                             switch (chonQL) {
-                                case 1:
-                                    quanLy.xemDanhSachSinhVien();
-                                    break;
+                                case 1: quanLyDangNhap.xemDanhSachSinhVien(); break;
+                                    
                                 case 2:
                                     System.out.print("Mã SV: ");
                                     String maSV = sc.nextLine();
@@ -80,12 +127,16 @@ public class Main {
                                     String mkSV = sc.nextLine();
                                     System.out.print("SĐT: ");
                                     String sdtSV = sc.nextLine();
-                                    quanLy.themSinhVien(new SinhVien(maSV, tenSV, emailSV, mkSV, sdtSV));
+                                    quanLyDangNhap.themSinhVien(new SinhVien(maSV, tenSV, emailSV, mkSV, sdtSV));
+                                    //Lưu file ngay sau khi thêm
+                                    FileHandler.ghiDanhSachSinhVien(quanLyDangNhap.getDanhSachSinhVien(), "sinhvien.txt");
                                     break;
+
                                 case 3:
                                     System.out.print("Nhập mã SV cần xóa: ");
                                     String idXoa = sc.nextLine();
-                                    quanLy.xoaSinhVien(idXoa);
+                                    quanLyDangNhap.xoaSinhVien(idXoa);
+                                    FileHandler.ghiDanhSachSinhVien(quanLyDangNhap.getDanhSachSinhVien(), "sinhvien.txt");
                                     break;
                                 case 4:
                                     int chonPhong;
@@ -101,8 +152,7 @@ public class Main {
 
                                         switch (chonPhong) {
                                             case 1:
-                                                quanLy.xemDanhSachPhong();
-                                                break;
+                                                quanLyDangNhap.xemDanhSachPhong(); break;
                                             case 2:
                                                 System.out.print("Mã phòng: ");
                                                 String maPhong = sc.nextLine();
@@ -110,21 +160,26 @@ public class Main {
                                                 String tenPhong = sc.nextLine();
                                                 System.out.print("Sức chứa: ");
                                                 int sucChua = readInt(sc);
-                                                quanLy.themPhong(new Phong(maPhong, tenPhong, sucChua));
+                                                quanLyDangNhap.themPhong(new Phong(maPhong, tenPhong, sucChua));
+                                                FileHandler.ghiDanhSachPhong(quanLyDangNhap.getDanhSachPhong(), "phong.txt");
                                                 break;
+
                                             case 3:
                                                 System.out.print("Nhập mã phòng cần xóa: ");
                                                 String mpXoa = sc.nextLine();
-                                                quanLy.xoaPhong(mpXoa);
+                                                quanLyDangNhap.xoaPhong(mpXoa);
+                                                FileHandler.ghiDanhSachPhong(quanLyDangNhap.getDanhSachPhong(), "phong.txt");
                                                 break;
+
                                             case 4:
                                                 System.out.print("Nhập mã phòng cần cập nhật trạng thái: ");
                                                 String mp = sc.nextLine();
-                                                Phong p = quanLy.timPhong(mp);
+                                                Phong p = quanLyDangNhap.timPhong(mp);
                                                 if (p != null) {
                                                     System.out.print("Nhập trạng thái mới (Còn trống / Đầy / Đang sửa chữa): ");
                                                     String tt = sc.nextLine();
                                                     p.setTrangThai(tt);
+                                                    FileHandler.ghiDanhSachPhong(quanLyDangNhap.getDanhSachPhong(), "phong.txt");
                                                     System.out.println(Color.GREEN + "✅ Đã cập nhật trạng thái phòng." + Color.RESET);
                                                 } else {
                                                     System.out.println("❌ Không tìm thấy phòng!");
@@ -141,13 +196,13 @@ public class Main {
                                     double tienDien = readDouble(sc);
                                     System.out.print("Nhập giá nước mỗi m3: ");
                                     double tienNuoc = readDouble(sc);
-                                    quanLy.capNhatChiPhi(tienNha, tienDien, tienNuoc);
+                                    quanLyDangNhap.capNhatChiPhi(tienNha, tienDien, tienNuoc);
                                     break;
 
                                 case 6:
                                     System.out.print("Nhập mã phòng để tạo hóa đơn: ");
                                     String maPhongThongBao = sc.nextLine();
-                                    Phong phongTB = quanLy.timPhong(maPhongThongBao);
+                                    Phong phongTB = quanLyDangNhap.timPhong(maPhongThongBao);
                                     if (phongTB != null) {
                                         System.out.print("Nhập số điện (kWh): ");
                                         int soDien = readInt(sc);
@@ -155,17 +210,19 @@ public class Main {
                                         int soNuoc = readInt(sc);
                                         System.out.print("Nhập tháng (ví dụ 2025-10): ");
                                         String thang = sc.nextLine();
-                                        quanLy.taoHoaDon(phongTB, soDien, soNuoc, thang);
+                                        quanLyDangNhap.taoHoaDon(phongTB, soDien, soNuoc, thang);
+                                        FileHandler.ghiDanhSachHoaDon(quanLyDangNhap.getTatCaHoaDon(), "hoadon.txt");
                                     } else {
                                         System.out.println("❌ Không tìm thấy phòng!");
                                     }
                                     break;
 
                                 case 7:
-                                    quanLy.xemDanhSachPhong();
+                                    quanLyDangNhap.xemDanhSachPhong();
                                     break;
 
                                 case 8:
+                                    //QUẢN LÝ YÊU CẦU BẢO TRÌ
                                     System.out.println("\n--- QUẢN LÝ YÊU CẦU BẢO TRÌ ---");
                                     System.out.println("1. Xem tất cả yêu cầu");
                                     System.out.println("2. Cập nhật trạng thái yêu cầu");
@@ -174,27 +231,25 @@ public class Main {
                                     int c = readInt(sc);
                                     sc.nextLine();
                                     if (c == 1) {
-                                        quanLy.xemTatCaYeuCau();
+                                        quanLyDangNhap.xemTatCaYeuCau();
                                     } else if (c == 2) {
                                         System.out.print("Nhập mã yêu cầu: ");
                                         String idyc = sc.nextLine();
                                         System.out.print("Nhập trạng thái mới (Chưa xử lý / Đang xử lý / Hoàn thành): ");
                                         String tt = sc.nextLine();
-                                        quanLy.capNhatTrangThaiYeuCau(idyc, tt);
+                                        quanLyDangNhap.capNhatTrangThaiYeuCau(idyc, tt);
+                                        FileHandler.ghiDanhSachYeuCau(quanLyDangNhap.getTatCaYeuCau(), "baotri.txt");
                                     }
                                     break;
 
                                 case 9:
-                                    BaoCao.thongKePhong(quanLy);
-                                    BaoCao.thongKeThanhToan(quanLy);
-                                    BaoCao.thongKeBaoTri(quanLy);
+                                    BaoCao.thongKePhong(quanLyDangNhap);
+                                    BaoCao.thongKeThanhToan(quanLyDangNhap);
+                                    BaoCao.thongKeBaoTri(quanLyDangNhap);
                                     break;
 
                                 case 10:
-                                    quanLy.guiNhacNo();
-                                    break;
-
-                                case 0:
+                                    quanLyDangNhap.guiNhacNo();
                                     break;
                             }
                         } while (chonQL != 0);
@@ -210,7 +265,11 @@ public class Main {
                     System.out.print("Nhập mật khẩu: ");
                     String mkSV = sc.nextLine();
 
-                    SinhVien svDangNhap = quanLy.timSinhVien(emailSV, mkSV);
+                    SinhVien svDangNhap = null;
+                    for (NguoiQuanLy ql : danhSachQuanLy) {
+                        svDangNhap = ql.timSinhVien(emailSV, mkSV);
+                    if (svDangNhap != null) break;
+                    }
 
                     if (svDangNhap != null) {
                         System.out.println(Color.GREEN + "✅ Đăng nhập thành công!" + Color.RESET);
@@ -233,46 +292,52 @@ public class Main {
                             chonSV = readInt(sc);
 
                             switch (chonSV) {
-                                case 1:
-                                    svDangNhap.hienThiThongTin();
-                                    break;
+                                case 1: svDangNhap.hienThiThongTin(); break;
                                 case 2:
                                     System.out.print("Nhập mật khẩu mới: ");
                                     String mkMoi = sc.nextLine();
                                     svDangNhap.setMatKhau(mkMoi);
                                     svDangNhap.themHoatDong("Đổi mật khẩu");
+                                    FileHandler.ghiDanhSachSinhVien(danhSachQuanLy.get(0).getDanhSachSinhVien(), "sinhvien.txt"); // lưu
                                     System.out.println(Color.GREEN + "✅ Đổi mật khẩu thành công!" + Color.RESET);
                                     break;
-                                case 3:
-                                    svDangNhap.xemLichSuHoatDong();
-                                    break;
+                                case 3: svDangNhap.xemLichSuHoatDong(); break;
                                 case 4:
-                                    quanLy.xemDanhSachPhong();
+                                    for (NguoiQuanLy ql : danhSachQuanLy) ql.xemDanhSachPhong();
                                     System.out.print("Nhập mã phòng muốn đăng ký: ");
                                     String maPhongChon = sc.nextLine();
-                                    Phong phongChon = quanLy.timPhong(maPhongChon);
-                                    if (phongChon != null) {
-                                        svDangNhap.dangKyPhong(phongChon);
-                                    } else {
-                                        System.out.println(Color.RED + "❌ Không tìm thấy phòng!" + Color.RESET);
-                                    }
-                                    break;
+                                    Phong phongChon = null;
+                                    for (NguoiQuanLy ql : danhSachQuanLy) {
+                                        phongChon = ql.timPhong(maPhongChon);
+                                        if (phongChon != null) {
+                                            svDangNhap.dangKyPhong(phongChon);
+                                            FileHandler.ghiDanhSachSinhVien(ql.getDanhSachSinhVien(), "sinhvien.txt");
+                                            break;
+                                        }
+                                        }
+                    if (phongChon == null) System.out.println(Color.RED + "❌ Không tìm thấy phòng!" + Color.RESET);
+                    break;
                                 case 5:
                                     svDangNhap.huyDangKyPhong();
+                                    for (NguoiQuanLy ql : danhSachQuanLy) {
+                                        FileHandler.ghiDanhSachSinhVien(ql.getDanhSachSinhVien(), "sinhvien.txt");
+                                    }
                                     break;
-                                case 6:
-                                    svDangNhap.xemThongBaoPhong();
-                                    break;
+                                case 6: svDangNhap.xemThongBaoPhong(); break;
                                 case 7:
                                     svDangNhap.thanhToan();
+                                    for (NguoiQuanLy ql : danhSachQuanLy) {
+                                    FileHandler.ghiDanhSachHoaDon(ql.getTatCaHoaDon(), "hoadon.txt");
+                                    }
                                     break;
-                                case 8:
-                                    svDangNhap.xemHoaDon();
-                                    break;
+                                case 8: svDangNhap.xemHoaDon(); break; 
                                 case 9:
                                     System.out.print("Nhập nội dung yêu cầu bảo trì: ");
                                     String noiDung = sc.nextLine();
-                                    svDangNhap.guiYeuCauBaoTri(quanLy, noiDung);
+                                    for (NguoiQuanLy ql : danhSachQuanLy) {
+                                    svDangNhap.guiYeuCauBaoTri(ql, noiDung);
+                                    FileHandler.ghiDanhSachYeuCau(ql.getTatCaYeuCau(), "baotri.txt");
+                                    }
                                     break;
                             }
                         } while (chonSV != 0);
@@ -281,13 +346,6 @@ public class Main {
                     }
                     break;
 
-                case 0:
-                    System.out.println(Color.CYAN + "👋 Tạm biệt!" + Color.RESET);
-                    break;
-
-                default:
-                    System.out.println(Color.RED + "❌ Lựa chọn không hợp lệ!" + Color.RESET);
-                    break;
 
             }
 

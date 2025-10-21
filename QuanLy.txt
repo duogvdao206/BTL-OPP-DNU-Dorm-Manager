@@ -1,0 +1,5 @@
+QL01,Nguyễn Văn A,quanly@gmail.com,123,0909123456,Quản lý ký túc xá
+QL02,Trần Thị B,tranb@gmail.com,234,0909234567,Quản lý ký túc xá
+QL03,Lê Văn C,lec@gmail.com,345,0909345678,Quản lý ký túc xá
+QL04,Phạm Thị D,phamd@gmail.com,456,0909456789,Quản lý ký túc xá
+QL05,Hoàng Văn E,hoange@gmail.com,567,0909567890,Quản lý ký túc xá
