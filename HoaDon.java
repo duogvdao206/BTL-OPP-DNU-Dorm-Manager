@@ -1,4 +1,4 @@
-class HoaDon {
+public class HoaDon {
     private String maHoaDon;
     private Phong phong;
     private int soKwh;
@@ -30,7 +30,7 @@ class HoaDon {
 
     public void thanhToan() {
         daThanhToan = true;
-        phong.xacNhanThanhToan();
+        if (phong != null) phong.xacNhanThanhToan();
     }
 
     @Override

@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class Phong {
+public class Phong {
     private String maPhong;
     private String tenPhong;
     private int sucChua; // số sinh viên tối đa
@@ -19,9 +19,16 @@ class Phong {
         this.sucChua = sucChua;
     }
 
+    // thêm 4 tham số constructor (dùng khi đọc file có trạng thái)
+    public Phong(String maPhong, String tenPhong, int sucChua, String trangThai) {
+        this(maPhong, tenPhong, sucChua);
+        this.trangThai = trangThai != null ? trangThai : this.trangThai;
+    }
+
     public String getMaPhong() { return maPhong; }
     public String getTenPhong() { return tenPhong; }
     public int getSucChua() { return sucChua; }
+    public int getSoLuongToiDa() { return sucChua; }
     public int getSoLuongHienTai() { return danhSachSV.size(); }
     public String getTrangThai() { return trangThai; }
     public void setTrangThai(String trangThai) { this.trangThai = trangThai; }

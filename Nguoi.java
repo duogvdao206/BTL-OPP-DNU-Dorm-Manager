@@ -1,4 +1,4 @@
-class Nguoi {
+public class Nguoi {
     protected String id;
     protected String hoTen;
     protected String email;

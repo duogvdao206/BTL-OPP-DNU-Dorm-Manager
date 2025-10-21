@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-class BaoCao {
+public class BaoCao {
     // Thống kê số phòng theo trạng thái
     public static void thongKePhong(NguoiQuanLy ql) {
         int tong = 0;

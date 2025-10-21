@@ -1,0 +1,10 @@
+P01,Phòng A1,4,Còn trống
+P02,Phòng A2,3,Còn trống
+P03,Phòng A3,4,Còn trống
+P04,Phòng A4,3,Còn trống
+P05,Phòng A5,4,Còn trống
+P06,Phòng A6,3,Còn trống
+P07,Phòng A7,4,Còn trống
+P08,Phòng A8,3,Còn trống
+P09,Phòng A9,4,Còn trống
+P10,Phòng A10,3,Còn trống

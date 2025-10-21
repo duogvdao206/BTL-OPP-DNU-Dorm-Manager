@@ -4,11 +4,19 @@ import java.util.List;
 class SinhVien extends Nguoi {
     private List<String> lichSuHoatDong = new ArrayList<>();
     private Phong phongDangO;
+    // lưu mã phòng (khi đọc file)
+    private String maPhongDangKy = "N/A";
     // danh sách hóa đơn liên quan tới sinh viên (tham chiếu)
     private List<HoaDon> hoaDons = new ArrayList<>();
 
     public SinhVien(String id, String hoTen, String email, String matKhau, String soDienThoai) {
         super(id, hoTen, email, matKhau, soDienThoai);
+    }
+
+    // constructor hỗ trợ đọc file có thêm maPhong
+    public SinhVien(String id, String hoTen, String email, String matKhau, String soDienThoai, String maPhong) {
+        this(id, hoTen, email, matKhau, soDienThoai);
+        if (maPhong != null && !maPhong.trim().isEmpty()) this.maPhongDangKy = maPhong;
     }
 
     @Override
@@ -57,6 +65,7 @@ class SinhVien extends Nguoi {
             p.themSinhVien(this);
             if (p.hasSinhVien(this)) {
                 phongDangO = p;
+                maPhongDangKy = p.getMaPhong();
                 themHoatDong("Đăng ký phòng " + p.getTenPhong());
                 System.out.println(Color.GREEN + "✅ Đăng ký phòng " + p.getTenPhong() + " thành công!" + Color.RESET);
             }
@@ -101,6 +110,7 @@ class SinhVien extends Nguoi {
             themHoatDong("Hủy đăng ký phòng " + old.getTenPhong());
             System.out.println(Color.RED + "❌ Bạn đã hủy đăng ký phòng " + old.getTenPhong() + Color.RESET);
             phongDangO = null;
+            maPhongDangKy = "N/A";
         } else {
             System.out.println(Color.YELLOW + "⚠️ Bạn chưa đăng ký phòng nào để hủy!" + Color.RESET);
         }
@@ -133,4 +143,15 @@ class SinhVien extends Nguoi {
     public Phong getPhongDangO() {
         return phongDangO;
     }
-}
+    // trả về mã phòng (lưu khi đọc file)
+    public String getMaPhong() {
+        return maPhongDangKy;
+    }
+
+    // những getter tương thích
+    public String getId() { return id; }
+    public String getHoTen() { return hoTen; }
+    public String getEmail() { return email; }
+    public String getMatKhau() { return matKhau; }
+    public String getSoDienThoai() { return soDienThoai; }
+}   
