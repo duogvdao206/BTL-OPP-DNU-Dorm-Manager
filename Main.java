@@ -68,15 +68,15 @@ public class Main {
 
         int chon;
         do {
-            System.out.println(Color.BOLD + Color.BLUE + "\n===== MENU CHÍNH =====" + Color.RESET);
+             System.out.println(Color.BOLD + Color.BLUE + "\n===== MENU CHÍNH =====" + Color.RESET);
             System.out.println(Color.CYAN + "1. Đăng nhập Quản lý" + Color.RESET);
             System.out.println(Color.GREEN + "2. Đăng nhập Sinh viên" + Color.RESET);
+            System.out.println(Color.YELLOW + "3. Đăng ký tài khoản Sinh viên" + Color.RESET);
             System.out.println(Color.RED + "0. Thoát" + Color.RESET);
             System.out.print(Color.YELLOW + "Chọn: " + Color.RESET);
             chon = readInt(sc);
 
             switch (chon) {
-                // ====== ĐĂNG NHẬP QUẢN LÝ ======
                 // ====== ĐĂNG NHẬP QUẢN LÝ ======
                 case 1:
                     System.out.print("Nhập email: ");
@@ -346,6 +346,87 @@ public class Main {
                     }
                     break;
 
+                // ====== ĐĂNG KÝ TÀI KHOẢN SINH VIÊN ======
+                case 3:
+                    System.out.println(Color.YELLOW + "\n===== ĐĂNG KÝ TÀI KHOẢN SINH VIÊN =====" + Color.RESET);
+                    
+                    // Nhập mã sinh viên
+                    System.out.print("Nhập mã sinh viên: ");
+                    String maSVMoi = sc.nextLine().trim();
+                    
+                    // Kiểm tra mã SV đã tồn tại chưa
+                    boolean daTonTai = false;
+                    for (NguoiQuanLy ql : danhSachQuanLy) {
+                        for (SinhVien sv : ql.getDanhSachSinhVien()) {
+                            if (sv.getId().equalsIgnoreCase(maSVMoi)) {
+                                daTonTai = true;
+                                break;
+                            }
+                        }
+                        if (daTonTai) break;
+                    }
+                    
+                    if (daTonTai) {
+                        System.out.println(Color.RED + "❌ Mã sinh viên đã tồn tại! Vui lòng chọn mã khác." + Color.RESET);
+                        break;
+                    }
+                    
+                    // Nhập họ tên
+                    System.out.print("Nhập họ tên: ");
+                    String tenSVMoi = sc.nextLine().trim();
+                    
+                    // Nhập email
+                    System.out.print("Nhập email: ");
+                    String emailSVMoi = sc.nextLine().trim();
+                    
+                    // Kiểm tra email đã tồn tại chưa
+                    boolean emailTonTai = false;
+                    for (NguoiQuanLy ql : danhSachQuanLy) {
+                        for (SinhVien sv : ql.getDanhSachSinhVien()) {
+                            if (sv.getEmail().equalsIgnoreCase(emailSVMoi)) {
+                                emailTonTai = true;
+                                break;
+                            }
+                        }
+                        if (emailTonTai) break;
+                    }
+                    
+                    if (emailTonTai) {
+                        System.out.println(Color.RED + "❌ Email đã được đăng ký! Vui lòng sử dụng email khác." + Color.RESET);
+                        break;
+                    }
+                    
+                    // Nhập mật khẩu
+                    System.out.print("Nhập mật khẩu: ");
+                    String mkSVMoi = sc.nextLine();
+                    
+                    System.out.print("Nhập lại mật khẩu: ");
+                    String mkXacNhan = sc.nextLine();
+                    
+                    if (!mkSVMoi.equals(mkXacNhan)) {
+                        System.out.println(Color.RED + "❌ Mật khẩu không khớp! Đăng ký thất bại." + Color.RESET);
+                        break;
+                    }
+                    
+                    // Nhập số điện thoại
+                    System.out.print("Nhập số điện thoại: ");
+                    String sdtSVMoi = sc.nextLine().trim();
+                    
+                    // Tạo tài khoản mới
+                    SinhVien svMoi = new SinhVien(maSVMoi, tenSVMoi, emailSVMoi, mkSVMoi, sdtSVMoi);
+                    
+                    // Thêm vào tất cả quản lý (để đồng bộ dữ liệu)
+                    for (NguoiQuanLy ql : danhSachQuanLy) {
+                        ql.themSinhVien(svMoi);
+                    }
+                    
+                    // Lưu vào file
+                    FileHandler.ghiDanhSachSinhVien(danhSachQuanLy.get(0).getDanhSachSinhVien(), "sinhvien.txt");
+                    
+                    System.out.println(Color.GREEN + "✅ Đăng ký tài khoản thành công!" + Color.RESET);
+                    System.out.println(Color.CYAN + "📧 Bạn có thể đăng nhập bằng email: " + emailSVMoi + Color.RESET);
+                    System.out.println(Color.CYAN + "👤 Mã sinh viên: " + maSVMoi + Color.RESET);
+                    break;
 
             }
 
